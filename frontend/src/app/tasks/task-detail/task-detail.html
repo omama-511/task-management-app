@@ -1,0 +1,11 @@
+<mat-card *ngIf="task$ | async as task">
+    <mat-card-title>{{ task.title }}</mat-card-title>
+    <mat-card-content>
+        <p>{{ task.description }}</p>
+        <p>Status: {{ task.completed ? 'Completed' : 'Pending' }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+        <a mat-button routerLink="/tasks">Back</a>
+        <a mat-button [routerLink]="['/tasks', task.id, 'edit']">Edit</a>
+    </mat-card-actions>
+</mat-card>

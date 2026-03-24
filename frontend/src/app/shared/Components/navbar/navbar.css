@@ -1,0 +1,13 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+a[mat-button] {
+  margin-left: 8px;
+}

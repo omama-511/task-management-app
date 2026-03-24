@@ -1,0 +1,30 @@
+<div class="task-header">
+    <h1>Your Tasks</h1>
+    <a mat-raised-button color="primary" routerLink="/tasks/new">
+        <mat-icon>add</mat-icon> Add Task
+    </a>
+</div>
+
+<div class="task-list-container">
+    <div *ngFor="let task of tasks$ | async" class="task-card">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>{{ task.title }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p class="task-desc">{{ task.description || 'No description provided.' }}</p>
+                <div class="task-status">
+                    <span class="status-badge" [class.completed]="task.completed">
+                        {{ task.completed ? 'Completed' : 'Pending' }}
+                    </span>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <a mat-button color="primary" [routerLink]="['/', 'tasks', task.id]">View</a>
+                <a mat-button color="accent" [routerLink]="['/', 'tasks', task.id, 'edit']">Edit</a>
+                <span class="spacer"></span>
+                <button mat-button color="warn" (click)="deleteTask(task.id!)">Delete</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>
