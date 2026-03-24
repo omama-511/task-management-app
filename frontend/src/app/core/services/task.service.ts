@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -18,7 +19,7 @@ export class TaskService {
     private tasks$ = new BehaviorSubject<Task[]>([]); // State management using behaviour subject
     tasksObservable$ = this.tasks$.asObservable();
 
-    private apiUrl = 'http://localhost:8000/tasks';
+    private apiUrl = `${environment.apiUrl}/tasks`;
 
     constructor(private http: HttpClient) { }
 

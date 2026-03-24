@@ -30,7 +30,10 @@
                 "output": "/"
               }
             ],
-            "styles": ["src/material-theme.scss", "src/styles.css"],
+            "styles": [
+              "src/material-theme.scss",
+              "src/styles.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -52,12 +55,19 @@
               "buildOptimizer": true
             },
             "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ],
               "optimization": false,
               "sourceMap": true,
               "extractCss": false,
               "namedChunks": true,
               "aot": false,
-              "vendorChunk": true
+              "vendorChunk": true,
+              "extractLicenses": false
             }
           },
           "defaultConfiguration": "production"
