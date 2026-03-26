@@ -9,6 +9,7 @@ export interface Task {
     title: string;
     description?: string;
     completed?: boolean;
+    created_at?: string;
 }
 
 @Injectable({

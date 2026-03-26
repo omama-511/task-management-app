@@ -13,6 +13,8 @@ export class Register {
 
   errorMessage = '';
   registerForm: FormGroup;
+  hidePassword = true;
+  hideConfirmPassword = true;
 
   constructor(
     private fb: FormBuilder,

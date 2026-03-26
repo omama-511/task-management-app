@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>Edit Profile</h2>
+<mat-dialog-content>
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+    
+    <div *ngIf="errorMessage" class="error-banner">
+      {{ errorMessage }}
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter your name">
+      <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
+        Name is required.
+      </mat-error>
+      <mat-error *ngIf="profileForm.get('name')?.hasError('minlength')">
+        Min 3 characters required.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" placeholder="Enter your email">
+      <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
+        Email is required.
+      </mat-error>
+      <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+        Enter a valid email.
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="profileForm.invalid || isSubmitting" (click)="onSubmit()">
+    {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
+  </button>
+</mat-dialog-actions>

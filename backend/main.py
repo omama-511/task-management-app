@@ -22,8 +22,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
-      # Angular dev server
+    allow_origins=[
+        "http://localhost:4200",
+        "https://task-management-app-po2p.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,7 +37,13 @@ ALGORITHM = "HS256"
 security = HTTPBearer()
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+    try:
+        return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+    except ValueError:
+        pass
+    except Exception:
+        pass
+    return False
 
 def get_password_hash(password: str) -> str:
     salt = bcrypt.gensalt()
@@ -69,11 +77,24 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str
+
 class UserResponse(BaseModel):
     id: str
     name: str
     email: str
     token: str
+
+class UserProfile(BaseModel):
+    id: str
+    name: str
+    email: str
+
+class ProfileUpdate(BaseModel):
+    name: str
+    email: str
 
 class TaskModel(BaseModel):
     title: str
@@ -83,6 +104,7 @@ class TaskModel(BaseModel):
 class TaskDB(TaskModel):
     id: str = Field(default_factory=str)
     user_id: str
+    created_at: str
 
 # Helpers
 def task_helper(task) -> dict:
@@ -91,7 +113,8 @@ def task_helper(task) -> dict:
         "title": task["title"],
         "description": task.get("description", ""),
         "completed": task.get("completed", False),
-        "user_id": str(task.get("user_id", ""))
+        "user_id": str(task.get("user_id", "")),
+        "created_at": task["_id"].generation_time.isoformat()
     }
 
 # Routes
@@ -122,6 +145,42 @@ async def login(user: UserLogin):
     user_id = str(db_user["_id"])
     token = create_access_token({"sub": user_id})
     return {"id": user_id, "name": db_user["name"], "email": db_user["email"], "token": token}
+
+@app.put("/users/me/password")
+async def update_password(update_data: PasswordUpdate, user_id: str = Depends(get_current_user)):
+    user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    if not verify_password(update_data.current_password, user["password"]):
+        raise HTTPException(status_code=400, detail="Incorrect current password")
+        
+    hashed_new_password = get_password_hash(update_data.new_password)
+    await users_collection.update_one(
+        {"_id": ObjectId(user_id)}, {"$set": {"password": hashed_new_password}}
+    )
+    return {"detail": "Password updated successfully"}
+
+@app.get("/users/me", response_model=UserProfile)
+async def get_user_profile(user_id: str = Depends(get_current_user)):
+    user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"id": str(user["_id"]), "name": user["name"], "email": user["email"]}
+
+@app.put("/users/me", response_model=UserProfile)
+async def update_profile(profile_data: ProfileUpdate, user_id: str = Depends(get_current_user)):
+    # Check if new email is taken by someone else
+    existing_user = await users_collection.find_one({"email": profile_data.email})
+    if existing_user and str(existing_user["_id"]) != user_id:
+        raise HTTPException(status_code=400, detail="Email already in use")
+
+    await users_collection.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": {"name": profile_data.name, "email": profile_data.email}}
+    )
+    
+    return {"id": user_id, "name": profile_data.name, "email": profile_data.email}
 
 @app.get("/tasks", response_model=List[TaskDB])
 async def get_tasks(user_id: str = Depends(get_current_user)):

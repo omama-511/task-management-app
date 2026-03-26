@@ -13,6 +13,7 @@ export class Login implements OnInit {
 
   errorMessage = '';
   loginForm: FormGroup;
+  hide = true;
 
   constructor(
     private fb: FormBuilder,
@@ -34,7 +35,14 @@ export class Login implements OnInit {
 
     this.auth.login(email!, password!).subscribe({
       next: () => this.router.navigate(['/tasks']),
-      error: (err) => this.errorMessage = err.error?.detail || 'Login failed'
+      error: (err) => {
+        console.error('Login Error:', err);
+        if (err.status === 0) {
+          this.errorMessage = 'Could not connect to the backend server. Is it running?';
+        } else {
+          this.errorMessage = err.error?.detail || `Error ${err.status}: ${err.message || 'Login failed'}`;
+        }
+      }
     });
   }
 }

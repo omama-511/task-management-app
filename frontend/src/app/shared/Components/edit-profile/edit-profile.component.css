@@ -1,0 +1,21 @@
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 320px;
+  padding-top: 10px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-banner {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  border: 1px solid #fecaca;
+}

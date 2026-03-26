@@ -2,12 +2,51 @@
   flex: 1 1 auto;
 }
 
-.title {
-  font-weight: 500;
-  font-size: 20px;
-  letter-spacing: 0.5px;
+.app-toolbar {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 10;
 }
 
-a[mat-button] {
+.brand-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 8px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.brand-container:hover {
+  transform: translateY(-1px);
+  background-color: #fcf8ff;
+}
+
+.brand-icon {
+  color: #d946ef;
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 2px 4px rgba(217, 70, 239, 0.3));
+}
+
+.brand-title {
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #ec4899 0%, #d946ef 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  text-transform: uppercase;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  text-shadow: 0 2px 10px rgba(217, 70, 239, 0.15);
+}
+
+a[mat-button], a[mat-raised-button], button[mat-button] {
   margin-left: 8px;
+  font-weight: 500;
 }

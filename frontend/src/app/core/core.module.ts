@@ -9,8 +9,6 @@ import { TaskService } from './services/task.service';
     HttpClientModule
   ],
   providers: [
-    AuthService,
-    TaskService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ]
 })

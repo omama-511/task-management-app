@@ -1,2 +1,43 @@
 <app-navbar></app-navbar>
-<router-outlet></router-outlet>
+
+<mat-sidenav-container class="app-container">
+  <!-- Left Side Dashboard -->
+  <mat-sidenav #sidenav mode="side" [opened]="auth.isAuthenticated" class="dashboard-sidenav">
+    <div class="user-profile-section" *ngIf="auth.isAuthenticated">
+      
+      <div class="avatar-circle">
+        {{ (auth.user$ | async)?.name?.charAt(0) | uppercase }}
+      </div>
+      
+      <div class="user-info">
+        <div class="name-container">
+          <h3 class="user-name">{{ (auth.user$ | async)?.name }}</h3>
+          <button mat-icon-button class="edit-profile-btn" (click)="openEditProfile()" title="Edit Profile">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+        <p class="user-email">{{ (auth.user$ | async)?.email }}</p>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="security-section">
+        <div class="password-display">
+          <mat-icon>lock</mat-icon>
+          <span class="dots">••••••••••</span>
+        </div>
+        
+        <button mat-stroked-button color="primary" class="change-pw-btn" (click)="openChangePassword()">
+          <mat-icon>vpn_key</mat-icon>
+          Change Password
+        </button>
+      </div>
+      
+    </div>
+  </mat-sidenav>
+
+  <!-- Main Content Area -->
+  <mat-sidenav-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

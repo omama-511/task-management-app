@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 // Angular Material Modules
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 // Components
 import { Navbar } from './Components/navbar/navbar';
@@ -19,6 +20,7 @@ import { DateFormatPipe } from './pipes/date-format-pipe';
     RouterModule,
     MatToolbarModule,
     MatButtonModule,
+    MatIconModule,
     Navbar,
     DateFormatPipe
   ],
