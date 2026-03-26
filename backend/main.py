@@ -20,12 +20,19 @@ users_collection = db["users"]
 # FastAPI app
 app = FastAPI()
 
+# CORS origins
+raw_origins = os.environ.get("CORS_ORIGINS", "").split(",")
+origins = [
+    "http://localhost:4200",
+    "https://task-management-app-po2p.vercel.app",
+    "https://task-management-app-po2p.vercel.app/",
+]
+if raw_origins and raw_origins[0]:
+    origins.extend([o.strip() for o in raw_origins])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:4200",
-        "https://task-management-app-po2p-git-main-omama-arshads-projects.vercel.app"
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
