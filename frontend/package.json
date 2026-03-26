@@ -4,9 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production",
-    "build:dev": "ng build --configuration development",
-    "watch": "ng build --watch --configuration development",
+    "build": "ng build frontend --configuration production",
+    "build:dev": "ng build frontend --configuration development",
+    "watch": "ng build frontend --watch --configuration development",
     "test": "ng test",
     "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
   },
