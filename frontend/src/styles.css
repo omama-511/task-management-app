@@ -1,9 +1,78 @@
+:root {
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
+  --card-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --header-bg: #ffffff;
+  --secondary-text: #64748b;
+  --input-bg: #ffffff;
+  --accent-color: #8b5cf6;
+}
+
+[data-theme='dark'] {
+  --bg-color: #0f172a;
+  --text-color: #f1f5f9;
+  --card-bg: #1e293b;
+  --sidebar-bg: #1e293b;
+  --border-color: #334155;
+  --header-bg: #1e293b;
+  --secondary-text: #94a3b8;
+  --input-bg: #0f172a;
+  --accent-color: #d946ef;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #f7f9fc;
+  font-family: 'Inter', Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+/* Angular Material Global Overrides */
+[data-theme='dark'] .mat-mdc-card {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+[data-theme='dark'] .mat-mdc-form-field-label {
+  color: var(--secondary-text) !important;
+}
+
+[data-theme='dark'] .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+[data-theme='dark'] .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+[data-theme='dark'] .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+  border-color: var(--border-color) !important;
+}
+
+[data-theme='dark'] .mat-mdc-select-value,
+[data-theme='dark'] .mat-mdc-select-arrow,
+[data-theme='dark'] .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: var(--text-color) !important;
+}
+
+[data-theme='dark'] .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input::placeholder,
+[data-theme='dark'] input::placeholder,
+[data-theme='dark'] textarea::placeholder {
+  color: #ffffff !important;
+  opacity: 0.8 !important;
+}
+
+[data-theme='dark'] .mat-mdc-form-field .mat-icon {
+  color: var(--text-color) !important;
+  opacity: 0.8;
+}
+
+[data-theme='dark'] .mat-mdc-form-field-label-wrapper label {
+  color: var(--text-color) !important;
+  opacity: 0.9;
+}
+
+[data-theme='dark'] h1, [data-theme='dark'] h2, [data-theme='dark'] h3 {
+  color: var(--text-color) !important;
 }
 
 app-root {

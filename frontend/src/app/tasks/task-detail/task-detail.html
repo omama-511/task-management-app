@@ -2,6 +2,7 @@
     <mat-card-title>{{ task.title }}</mat-card-title>
     <mat-card-content>
         <p>{{ task.description }}</p>
+        <p>Priority: {{ task.priority || 'Low' }}</p>
         <p>Status: {{ task.completed ? 'Completed' : 'Pending' }}</p>
     </mat-card-content>
     <mat-card-actions>

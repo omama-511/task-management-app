@@ -10,6 +10,8 @@ export interface Task {
     description?: string;
     completed?: boolean;
     created_at?: string;
+    priority?: 'Low' | 'Medium' | 'High';
+    pinned?: boolean;
 }
 
 @Injectable({
@@ -66,6 +68,17 @@ export class TaskService {
             map(() => {
                 const current = this.tasks$.value.filter(t => t.id !== id);
                 this.tasks$.next(current);
+            })
+        );
+    }
+
+    // Toggle Pin
+    togglePin(id: string, pinned: boolean): Observable<Task> {
+        return this.http.put<Task>(`${this.apiUrl}/${id}`, { pinned: !pinned }).pipe(
+            map(updatedTask => {
+                const current = this.tasks$.value.map(t => t.id === id ? updatedTask : t);
+                this.tasks$.next(current);
+                return updatedTask;
             })
         );
     }

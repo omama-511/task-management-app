@@ -11,6 +11,8 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ChangePasswordDialog } from './shared/Components/change-password/change-password.component';
 import { EditProfileDialog } from './shared/Components/edit-profile/edit-profile.component';
 
+import { ThemeService } from './core/services/theme.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -21,7 +23,11 @@ import { EditProfileDialog } from './shared/Components/edit-profile/edit-profile
 export class App {
   title = signal('Task Management App');
 
-  constructor(public auth: AuthService, private dialog: MatDialog) { }
+  constructor(
+    public auth: AuthService, 
+    private dialog: MatDialog,
+    private themeService: ThemeService
+  ) { }
 
   openChangePassword() {
     this.dialog.open(ChangePasswordDialog, {

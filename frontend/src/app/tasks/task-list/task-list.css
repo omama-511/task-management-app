@@ -10,6 +10,7 @@
   margin: 0;
   font-size: 28px;
   font-weight: 500;
+  color: var(--text-color);
 }
 
 .task-list-container {
@@ -20,7 +21,7 @@
 }
 
 .task-desc {
-  color: #555;
+  color: var(--secondary-text);
   margin-bottom: 16px;
   min-height: 48px;
   line-height: 1.5;
@@ -32,13 +33,13 @@
   border-radius: 16px;
   font-size: 13px;
   font-weight: 600;
-  background-color: #ffebee;
-  color: #c62828;
+  background-color: #ef444420;
+  color: #f87171;
 }
 
 .status-badge.completed {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: #22c55e20;
+  color: #4ade80;
 }
 
 .spacer {
@@ -49,6 +50,46 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-card mat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.task-card mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.card-header-main {
+  flex: 1;
+}
+
+.pin-btn {
+  opacity: 0.3;
+  transition: all 0.2s ease;
+  margin-top: -8px;
+  margin-right: -8px;
+}
+
+.task-card:hover .pin-btn, .pin-btn.is-pinned {
+  opacity: 1;
+}
+
+.pin-btn.is-pinned {
+  color: #8b5cf6;
+  transform: rotate(45deg);
+}
+
+.pinned-task mat-card {
+  border: 1px solid #8b5cf640 !important;
+  background: linear-gradient(135deg, var(--card-bg) 0%, rgba(139, 92, 246, 0.05) 100%) !important;
 }
 
 .task-card mat-card-actions {
@@ -70,12 +111,105 @@
   min-width: 200px;
 }
 
+/* Stats Dashboard */
+.stats-dashboard {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-label {
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.stat-separator {
+  color: var(--border-color);
+  font-weight: 300;
+}
+
+.text-success { color: #4ade80; }
+.text-warn { color: #fbbf24; }
+
+.task-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.priority-badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.priority-high {
+  background-color: #ef444420;
+  color: #f87171;
+}
+.priority-high .dot { background-color: #ef4444; }
+
+.priority-medium {
+  background-color: #f59e0b20;
+  color: #fbbf24;
+}
+.priority-medium .dot { background-color: #f59e0b; }
+
+.priority-low {
+  background-color: #22c55e20;
+  color: #4ade80;
+}
+.priority-low .dot { background-color: #22c55e; }
+
 .no-tasks {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 40px;
-  color: #666;
+  padding: 60px 40px;
+  color: var(--secondary-text);
   font-size: 1.1rem;
-  background: #f9f9f9;
-  border-radius: 8px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px dashed var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  opacity: 0.2;
+  margin-bottom: 8px;
 }

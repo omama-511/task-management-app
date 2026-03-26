@@ -20,6 +20,9 @@ export class TaskList implements OnInit {
   sortOrder$ = new BehaviorSubject<string>('newest');
 
   filteredTasks$: Observable<Task[]>;
+  totalTasks$: Observable<number>;
+  completedTasks$: Observable<number>;
+  pendingTasks$: Observable<number>;
 
   constructor(private taskService: TaskService) {
     this.filteredTasks$ = combineLatest([
@@ -109,8 +112,20 @@ export class TaskList implements OnInit {
 
         // Add Sorting logic here
         return filtered.sort((a: Task, b: Task) => {
+          // Pinned tasks always on top
+          if (a.pinned !== b.pinned) {
+            return a.pinned ? -1 : 1;
+          }
+
           if (sort === 'az') {
             return a.title.localeCompare(b.title);
+          }
+
+          if (sort === 'priority') {
+            const priorityWeight: any = { 'High': 3, 'Medium': 2, 'Low': 1 };
+            const weightA = priorityWeight[a.priority || 'Low'] || 1;
+            const weightB = priorityWeight[b.priority || 'Low'] || 1;
+            return weightB - weightA; // High priority first
           }
 
           const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
@@ -124,10 +139,20 @@ export class TaskList implements OnInit {
         });
       })
     );
+
+    this.totalTasks$ = this.taskService.tasksObservable$.pipe(map(tasks => tasks.length));
+    this.completedTasks$ = this.taskService.tasksObservable$.pipe(map(tasks => tasks.filter(t => t.completed).length));
+    this.pendingTasks$ = this.taskService.tasksObservable$.pipe(map(tasks => tasks.filter(t => !t.completed).length));
   }
 
   ngOnInit(): void {
     this.taskService.getTasks();
+  }
+
+  togglePin(task: Task) {
+    if (task.id) {
+      this.taskService.togglePin(task.id, !!task.pinned).subscribe();
+    }
   }
 
   onSearchChange(value: string) {

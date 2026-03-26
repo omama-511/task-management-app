@@ -20,12 +20,19 @@ users_collection = db["users"]
 # FastAPI app
 app = FastAPI()
 
+# CORS origins
+raw_origins = os.environ.get("CORS_ORIGINS", "").split(",")
+origins = [
+    "http://localhost:4200",
+    "https://task-management-app-po2p.vercel.app",
+    "https://task-management-app-po2p.vercel.app/",
+]
+if raw_origins and raw_origins[0]:
+    origins.extend([o.strip() for o in raw_origins])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:4200",
-        "https://task-management-app-po2p.vercel.app"
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -100,11 +107,20 @@ class TaskModel(BaseModel):
     title: str
     description: Optional[str] = ""
     completed: bool = False
+    priority: str = "Low"
+    pinned: bool = False
 
 class TaskDB(TaskModel):
     id: str = Field(default_factory=str)
     user_id: str
     created_at: str
+
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    completed: Optional[bool] = None
+    priority: Optional[str] = None
+    pinned: Optional[bool] = None
 
 # Helpers
 def task_helper(task) -> dict:
@@ -113,6 +129,8 @@ def task_helper(task) -> dict:
         "title": task["title"],
         "description": task.get("description", ""),
         "completed": task.get("completed", False),
+        "priority": task.get("priority", "Low"),
+        "pinned": task.get("pinned", False),
         "user_id": str(task.get("user_id", "")),
         "created_at": task["_id"].generation_time.isoformat()
     }
@@ -205,9 +223,10 @@ async def create_task(task: TaskModel, user_id: str = Depends(get_current_user))
     return task_helper(new_task)
 
 @app.put("/tasks/{task_id}", response_model=TaskDB)
-async def update_task(task_id: str, task: TaskModel, user_id: str = Depends(get_current_user)):
+async def update_task(task_id: str, task: TaskUpdate, user_id: str = Depends(get_current_user)):
+    update_data = {k: v for k, v in task.dict(exclude_unset=True).items() if v is not None}
     result = await tasks_collection.update_one(
-        {"_id": ObjectId(task_id), "user_id": user_id}, {"$set": task.dict()}
+        {"_id": ObjectId(task_id), "user_id": user_id}, {"$set": update_data}
     )
     if result.matched_count == 1:
         updated_task = await tasks_collection.find_one({"_id": ObjectId(task_id)})
@@ -220,3 +239,4 @@ async def delete_task(task_id: str, user_id: str = Depends(get_current_user)):
     if result.deleted_count == 1:
         return {"detail": "Task deleted"}
     raise HTTPException(status_code=404, detail="Task not found")
+

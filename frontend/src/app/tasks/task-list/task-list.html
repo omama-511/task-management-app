@@ -5,6 +5,23 @@
     </a>
 </div>
 
+<div class="stats-dashboard">
+    <div class="stat-item">
+        <span class="stat-label">Total:</span>
+        <span class="stat-value">{{ totalTasks$ | async }}</span>
+    </div>
+    <div class="stat-separator">|</div>
+    <div class="stat-item">
+        <span class="stat-label">Completed:</span>
+        <span class="stat-value text-success">{{ completedTasks$ | async }}</span>
+    </div>
+    <div class="stat-separator">|</div>
+    <div class="stat-item">
+        <span class="stat-label">Pending:</span>
+        <span class="stat-value text-warn">{{ pendingTasks$ | async }}</span>
+    </div>
+</div>
+
 <div class="filter-controls">
     <mat-form-field appearance="outline">
         <mat-label>Search tasks</mat-label>
@@ -60,6 +77,7 @@
         <mat-select (selectionChange)="onSortChange($event.value)" value="newest">
             <mat-option value="newest">Newest First</mat-option>
             <mat-option value="oldest">Oldest First</mat-option>
+            <mat-option value="priority">Priority (High to Low)</mat-option>
             <mat-option value="az">Alphabetical (A-Z)</mat-option>
         </mat-select>
     </mat-form-field>
@@ -67,21 +85,34 @@
 
 <div class="task-list-container">
     <div *ngIf="(filteredTasks$ | async)?.length === 0" class="no-tasks">
-        <p>No tasks matched your filters.</p>
+        <mat-icon class="empty-icon">task_alt</mat-icon>
+        <p *ngIf="(totalTasks$ | async) === 0">No tasks yet. Start by adding one!</p>
+        <p *ngIf="(totalTasks$ | async)! > 0">No tasks matched your filters.</p>
+        <a mat-stroked-button color="primary" routerLink="/tasks/new" *ngIf="(totalTasks$ | async) === 0">
+            Create Your First Task
+        </a>
     </div>
-    <div *ngFor="let task of filteredTasks$ | async" class="task-card">
+    <div *ngFor="let task of filteredTasks$ | async" class="task-card" [class.pinned-task]="task.pinned">
         <mat-card>
             <mat-card-header>
-                <mat-card-title>{{ task.title }}</mat-card-title>
-                <mat-card-subtitle *ngIf="task.created_at">
-                    {{ task.created_at | date:'medium' }}
-                </mat-card-subtitle>
+                <div class="card-header-main">
+                    <mat-card-title>{{ task.title }}</mat-card-title>
+                    <mat-card-subtitle *ngIf="task.created_at">
+                        {{ task.created_at | date:'medium' }}
+                    </mat-card-subtitle>
+                </div>
+                <button mat-icon-button class="pin-btn" [class.is-pinned]="task.pinned" (click)="togglePin(task)" [title]="task.pinned ? 'Unpin Task' : 'Pin Task'">
+                    <mat-icon>{{ task.pinned ? 'push_pin' : 'push_pin_outline' }}</mat-icon>
+                </button>
             </mat-card-header>
             <mat-card-content>
                 <p class="task-desc">{{ task.description || 'No description provided.' }}</p>
-                <div class="task-status">
+                <div class="task-meta">
                     <span class="status-badge" [class.completed]="task.completed">
                         {{ task.completed ? 'Completed' : 'Pending' }}
+                    </span>
+                    <span class="priority-badge" [ngClass]="'priority-' + (task.priority || 'Low').toLowerCase()">
+                        <span class="dot"></span> {{ task.priority || 'Low' }}
                     </span>
                 </div>
             </mat-card-content>

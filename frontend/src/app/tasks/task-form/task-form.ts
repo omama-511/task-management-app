@@ -24,7 +24,8 @@ export class TaskForm implements OnInit {
     this.taskForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
-      completed: [false]
+      completed: [false],
+      priority: ['Low']
     });
   }
 
