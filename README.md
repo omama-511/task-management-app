@@ -76,6 +76,7 @@ A full-stack, secure, and modern Task Management application built with **Angula
 
 ---
 
+ HEAD
 ## 🧪 Documentation
 
 For a deep dive into the technical architecture, data flows, and specific Material UI components used, please refer to our internal documentation:
@@ -87,6 +88,12 @@ For a deep dive into the technical architecture, data flows, and specific Materi
 
 -   **Frontend**: Ready for deployment on **Vercel** via the included `vercel.json`.
 -   **Backend**: Best suited for **Railway** or **Render** where MongoDB can be linked as an environment variable (`MONGO_URL`).
+
+## 🏗️ Deployment
+
+-   **Frontend**: Deployed on **Vercel** via the included `vercel.json`.
+-   **Backend**: Deployed on **Railway** 
+1d663aac17f208706fc63539b2cfba6841c3f9ac
 
 ---
 
