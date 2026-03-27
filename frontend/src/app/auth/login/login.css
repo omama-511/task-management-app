@@ -13,6 +13,7 @@ form {
 form h2 {
   margin: 0 0 1rem;
   text-align: center;
+  color: var(--accent-color);
 }
 
 mat-form-field {
