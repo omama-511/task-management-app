@@ -28,6 +28,8 @@ origins = [
     "https://task-management-app-po2p.vercel.app/",
     "https://task-management-app-u98x-git-main-omama-arshads-projects.vercel.app",
     "https://task-management-app-u98x-git-main-omama-arshads-projects.vercel.app/",
+    "https://task-management-app-j4g3.vercel.app/",
+    "https://task-management-app-j4g3.vercel.app",
 ]
 if raw_origins and raw_origins[0]:
     origins.extend([o.strip() for o in raw_origins])
