@@ -20,19 +20,16 @@ users_collection = db["users"]
 # FastAPI app
 app = FastAPI()
 
-# CORS origins
-raw_origins = os.environ.get("CORS_ORIGINS", "").split(",")
+# Read from environment
+FRONTEND_URL = os.getenv("FRONTEND_URL")
+
 origins = [
-    "http://localhost:4200",
-    "https://task-management-app-po2p.vercel.app",
-    "https://task-management-app-po2p.vercel.app/",
-    "https://task-management-app-u98x-git-main-omama-arshads-projects.vercel.app",
-    "https://task-management-app-u98x-git-main-omama-arshads-projects.vercel.app/",
-    "https://task-management-app-j4g3.vercel.app/",
-    "https://task-management-app-j4g3.vercel.app",
+    "http://localhost:4200",  # local dev
 ]
-if raw_origins and raw_origins[0]:
-    origins.extend([o.strip() for o in raw_origins])
+
+# Add production frontend if exists
+if FRONTEND_URL:
+    origins.append(FRONTEND_URL)
 
 app.add_middleware(
     CORSMiddleware,
