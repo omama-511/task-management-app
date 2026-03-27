@@ -50,4 +50,5 @@
 a[mat-button], a[mat-raised-button], button[mat-button] {
   margin-left: 8px;
   font-weight: 500;
+  color: var(--accent-color) !important;
 }
