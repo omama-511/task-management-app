@@ -3,6 +3,9 @@
 <mat-sidenav-container class="app-container">
   <!-- Left Side Dashboard -->
   <mat-sidenav #sidenav mode="side" [opened]="auth.isAuthenticated" class="dashboard-sidenav">
+    <div class="sidebar-header" *ngIf="auth.isAuthenticated">
+      <h2 class="sidebar-title">Dashboard</h2>
+    </div>
     <div class="user-profile-section" *ngIf="auth.isAuthenticated">
       
       <div class="avatar-circle">

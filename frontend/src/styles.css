@@ -22,7 +22,8 @@
   --accent-color: #d946ef;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -32,12 +33,19 @@ html, body {
   transition: all 0.3s ease;
 }
 
-/* Angular Material Global Overrides */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color);
+  margin-top: 0;
+}
+
+/* --- Consolidated Dark Mode Material Overrides --- */
+
 [data-theme='dark'] .mat-mdc-card {
   background-color: var(--card-bg) !important;
   color: var(--text-color) !important;
 }
 
+/* Form Field Labels & Borders */
 [data-theme='dark'] .mat-mdc-form-field-label {
   color: var(--secondary-text) !important;
 }
@@ -48,24 +56,118 @@ html, body {
   border-color: var(--border-color) !important;
 }
 
+[data-theme='dark'] .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+[data-theme='dark'] .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+[data-theme='dark'] .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--accent-color) !important;
+}
+
+/* FIX: Floating Labels (The "Notch" issue) */
+[data-theme='dark'] .mat-mdc-form-field-label-wrapper {
+  overflow: visible !important;
+}
+
+[data-theme='dark'] .mdc-floating-label--float-above {
+  background-color: var(--card-bg) !important;
+  /* Default for cards/dialogs */
+  padding: 0 8px !important;
+  transform: translateY(-36px) scale(0.75) !important;
+  color: var(--accent-color) !important;
+  z-index: 10 !important;
+  border-radius: 4px;
+  opacity: 1 !important;
+}
+
+/* Special case for search field on page background */
+[data-theme='dark'] .filter-controls .mdc-floating-label--float-above {
+  background-color: var(--bg-color) !important;
+}
+
+/* Fix overlapping placeholder */
+[data-theme='dark'] .mat-mdc-form-field .mdc-text-field__input::placeholder {
+  color: var(--secondary-text) !important;
+  opacity: 0.4 !important;
+}
+
+/* Dropdown/Select fix */
 [data-theme='dark'] .mat-mdc-select-value,
-[data-theme='dark'] .mat-mdc-select-arrow,
-[data-theme='dark'] .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+[data-theme='dark'] .mat-mdc-select-arrow {
   color: var(--text-color) !important;
 }
 
-[data-theme='dark'] .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input::placeholder,
-[data-theme='dark'] input::placeholder,
-[data-theme='dark'] textarea::placeholder {
+/* Multiple Input/Textarea Fixes (Dialogs, Forms, etc.) */
+[data-theme='dark'] input,
+[data-theme='dark'] textarea,
+[data-theme='dark'] .mdc-text-field--outlined .mdc-text-field__input {
+  color: var(--text-color) !important;
+  -webkit-text-fill-color: var(--text-color) !important;
+}
+
+/* Chrome Autofill dark mode override to prevent light background with white text */
+[data-theme='dark'] input:-webkit-autofill,
+[data-theme='dark'] input:-webkit-autofill:hover, 
+[data-theme='dark'] input:-webkit-autofill:focus, 
+[data-theme='dark'] input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--card-bg) inset !important;
+  -webkit-text-fill-color: var(--text-color) !important;
+  caret-color: var(--text-color) !important;
+}
+
+/* Global Icon Visibility */
+[data-theme='dark'] .mat-icon {
+  color: inherit;
+}
+
+/* Dashboard & Sidebar Fixes */
+[data-theme='dark'] .edit-profile-btn mat-icon {
+  color: var(--accent-color) !important;
+}
+
+[data-theme='dark'] .user-name {
+  color: var(--text-color) !important;
+}
+
+[data-theme='dark'] .user-email {
+  color: var(--secondary-text) !important;
+}
+
+/* Task Card Subtitles (Date/Time) */
+[data-theme='dark'] .mat-mdc-card-subtitle,
+[data-theme='dark'] mat-card-subtitle {
+  color: var(--secondary-text) !important;
+}
+
+/* Dialog Fixes */
+[data-theme='dark'] .mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+[data-theme='dark'] .mat-mdc-dialog-title {
+  color: var(--accent-color) !important;
+}
+
+/* Button Overrides */
+[data-theme='dark'] .mat-mdc-raised-button.mat-primary {
+  background-color: var(--accent-color) !important;
   color: #ffffff !important;
-  opacity: 0.8 !important;
 }
 
-[data-theme='dark'] .mat-mdc-form-field .mat-icon {
+[data-theme='dark'] .mat-mdc-raised-button.mat-primary:disabled {
+  background-color: var(--border-color) !important;
+  color: var(--secondary-text) !important;
+  opacity: 0.6;
+}
+
+[data-theme='dark'] .mat-mdc-button.mat-primary {
+  color: var(--accent-color) !important;
+}
+
+[data-theme='dark'] .mat-mdc-button {
   color: var(--text-color) !important;
-  opacity: 0.8;
 }
 
+ HEAD
 [data-theme='dark'] .mat-mdc-form-field-label-wrapper label {
   color: var(--text-color) !important;
   opacity: 0.9;
@@ -73,6 +175,11 @@ html, body {
 
 [data-theme='dark'] h1, [data-theme='dark'] h2, [data-theme='dark'] h3 {
   color: var(--text-color);
+
+/* Checkbox fix */
+[data-theme='dark'] .mat-mdc-checkbox label {
+  color: var(--text-color) !important;
+ cc9616b (Added test cases and covered them 100%)
 }
 
 app-root {
@@ -81,7 +188,7 @@ app-root {
   height: 100%;
 }
 
-router-outlet + * {
+router-outlet+* {
   display: block;
   max-width: 1200px;
   margin: 0 auto;

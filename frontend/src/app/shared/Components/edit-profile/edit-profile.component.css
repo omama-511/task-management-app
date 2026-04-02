@@ -1,21 +1,16 @@
 .profile-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 320px;
-  padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 0;
+    min-width: 350px;
 }
-
-.full-width {
-  width: 100%;
+mat-form-field {
+    width: 100%;
 }
-
-.error-banner {
-  background-color: #fee2e2;
-  color: #dc2626;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-  border: 1px solid #fecaca;
+.error-msg {
+    color: #f44336;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 8px;
 }

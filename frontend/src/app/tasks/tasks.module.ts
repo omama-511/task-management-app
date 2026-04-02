@@ -39,11 +39,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [
-        TaskList,
-        TaskDetail,
-        TaskForm
-    ],
+    declarations: [],
     imports: [
         CommonModule,
         ReactiveFormsModule,
@@ -57,7 +53,10 @@ const routes: Routes = [
         MatIconModule,
         MatSelectModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
+        TaskList,
+        TaskDetail,
+        TaskForm
     ]
 })
 export class TasksModule { }

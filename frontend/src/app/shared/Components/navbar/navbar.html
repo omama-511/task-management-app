@@ -14,7 +14,7 @@
     <a mat-raised-button color="primary" routerLink="/auth/register" *ngIf="!auth.isAuthenticated">Register</a>
 
     <!-- Theme Toggle -->
-    <button mat-icon-button (click)="toggleTheme()" title="Toggle Dark Mode">
+    <button mat-icon-button (click)="themeService.toggleTheme()" title="Toggle Dark Mode">
         <mat-icon>{{ (themeService.isDarkTheme$ | async) ? 'light_mode' : 'dark_mode' }}</mat-icon>
     </button>
 

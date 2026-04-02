@@ -21,6 +21,8 @@ export class ThemeService {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         this.setDarkTheme(prefersDark);
       }
+    } else {
+      console.debug('ThemeService initialized on non-browser platform');
     }
   }
 
@@ -33,6 +35,8 @@ export class ThemeService {
       } else {
         document.body.removeAttribute('data-theme');
       }
+    } else {
+      console.debug('setDarkTheme: Not on browser platform, skipping side effects');
     }
   }
 

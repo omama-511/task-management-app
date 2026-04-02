@@ -27,7 +27,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [Login, Register],
+    declarations: [],
     imports: [
         CommonModule,
         RouterModule.forChild(routes),
@@ -36,6 +36,8 @@ const routes: Routes = [
         MatInputModule,
         MatButtonModule,
         MatIconModule,
+        Login,
+        Register
     ],
     exports: [RouterModule]
 })

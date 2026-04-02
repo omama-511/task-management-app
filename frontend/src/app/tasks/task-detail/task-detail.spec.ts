@@ -1,22 +1,35 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+/** @vitest-environment jsdom */
 import { TaskDetail } from './task-detail';
+import { of } from 'rxjs';
+import { describe, it, expect, vi } from 'vitest';
 
-describe('TaskDetail', () => {
+describe('TaskDetail (Unit Test)', () => {
   let component: TaskDetail;
-  let fixture: ComponentFixture<TaskDetail>;
+  let taskServiceMock: { getTaskById: ReturnType<typeof vi.fn> };
+  let activatedRouteMock: { snapshot: { params: { id: string } } };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [TaskDetail],
-    }).compileComponents();
+  it('should initialize and load task detail', () => {
+    taskServiceMock = {
+      getTaskById: vi.fn().mockReturnValue(of({
+        id: '1', title: 'Test Task', priority: 'High', completed: false
+      }))
+    };
 
-    fixture = TestBed.createComponent(TaskDetail);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
-  });
+    activatedRouteMock = {
+      snapshot: {
+        params: { id: '1' }
+      }
+    };
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    component = new TaskDetail(
+      taskServiceMock as unknown as import('../../core/services/task.service').TaskService, 
+      activatedRouteMock as unknown as import('@angular/router').ActivatedRoute
+    );
+    component.ngOnInit();
+
+    expect(taskServiceMock.getTaskById).toHaveBeenCalledWith('1');
+    component.task$?.subscribe(task => {
+      expect(task.title).toBe('Test Task');
+    });
   });
 });

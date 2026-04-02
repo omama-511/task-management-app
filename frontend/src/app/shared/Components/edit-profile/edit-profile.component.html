@@ -1,38 +1,28 @@
 <h2 mat-dialog-title>Edit Profile</h2>
 <mat-dialog-content>
-  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
-    
-    <div *ngIf="errorMessage" class="error-banner">
-      {{ errorMessage }}
-    </div>
+    <form [formGroup]="profileForm" class="profile-form">
+        <mat-form-field appearance="outline">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter your name" required>
+            <mat-error *ngIf="profileForm.get('name')?.hasError('required')">Name is required</mat-error>
+            <mat-error *ngIf="profileForm.get('name')?.hasError('minlength')">Minimum 3 characters</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" placeholder="Enter your name">
-      <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
-        Name is required.
-      </mat-error>
-      <mat-error *ngIf="profileForm.get('name')?.hasError('minlength')">
-        Min 3 characters required.
-      </mat-error>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="Enter your email" required>
+            <mat-error *ngIf="profileForm.get('email')?.hasError('required')">Email is required</mat-error>
+            <mat-error *ngIf="profileForm.get('email')?.hasError('email')">Invalid email format</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" placeholder="Enter your email">
-      <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
-        Email is required.
-      </mat-error>
-      <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
-        Enter a valid email.
-      </mat-error>
-    </mat-form-field>
-
-  </form>
+        <div class="error-msg" *ngIf="errorMessage">{{errorMessage}}</div>
+    </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button color="primary" [disabled]="profileForm.invalid || isSubmitting" (click)="onSubmit()">
-    {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
-  </button>
+    <button mat-button (click)="dialogRef.close()" [disabled]="isSubmitting">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" 
+            [disabled]="profileForm.invalid || isSubmitting">
+        <span *ngIf="!isSubmitting">Save Changes</span>
+        <span *ngIf="isSubmitting">Saving...</span>
+    </button>
 </mat-dialog-actions>

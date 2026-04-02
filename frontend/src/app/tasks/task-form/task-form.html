@@ -1,30 +1,21 @@
 <div class="form-container">
     <mat-card class="task-form-card">
-
         <mat-card-header>
             <mat-card-title>
                 {{ taskId ? 'Update Task' : 'Create New Task' }}
             </mat-card-title>
         </mat-card-header>
-
         <form [formGroup]="taskForm" (ngSubmit)="submit()">
-
             <mat-card-content class="form-content">
-
-                <!-- Title -->
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Title</mat-label>
                     <input matInput formControlName="title" placeholder="E.g., Complete assignment">
                 </mat-form-field>
-
-                <!-- Description -->
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Description</mat-label>
                     <textarea matInput formControlName="description" rows="4"
                         placeholder="Task details here..."></textarea>
                 </mat-form-field>
-
-                <!-- Priority -->
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Priority</mat-label>
                     <mat-select formControlName="priority">
@@ -33,22 +24,16 @@
                         <mat-option value="High">High</mat-option>
                     </mat-select>
                 </mat-form-field>
-
-                <!-- Checkbox -->
                 <mat-checkbox formControlName="completed" color="primary" class="checkbox">
                     Mark as Completed
                 </mat-checkbox>
-
             </mat-card-content>
-
             <mat-card-actions class="actions">
                 <button mat-button type="button" routerLink="/tasks">Cancel</button>
                 <button mat-raised-button color="primary" type="submit" [disabled]="taskForm.invalid">
                     {{ taskId ? 'Update Task' : 'Add Task' }}
                 </button>
             </mat-card-actions>
-
         </form>
-
     </mat-card>
 </div>

@@ -10,7 +10,6 @@ import { AuthService } from './core/services/auth.service';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ChangePasswordDialog } from './shared/Components/change-password/change-password.component';
 import { EditProfileDialog } from './shared/Components/edit-profile/edit-profile.component';
-
 import { ThemeService } from './core/services/theme.service';
 
 @Component({
@@ -24,7 +23,7 @@ export class App {
   title = signal('Task Management App');
 
   constructor(
-    public auth: AuthService, 
+    public auth: AuthService,
     private dialog: MatDialog,
     private themeService: ThemeService
   ) { }
@@ -37,6 +36,8 @@ export class App {
 
   openEditProfile() {
     const user = this.auth.currentUserValue;
+    if (!user) return; // Prevent opening dialong if no user is found
+
     const dialogRef = this.dialog.open(EditProfileDialog, {
       width: '400px',
       data: { name: user.name, email: user.email }

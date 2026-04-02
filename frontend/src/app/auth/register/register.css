@@ -6,27 +6,23 @@ form {
   padding: 2.5rem;
   background: var(--card-bg);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   gap: 1.2rem;
 }
-
 form h2 {
   margin: 0 0 1rem;
   text-align: center;
   color: var(--accent-color);
 }
-
 mat-form-field {
   width: 100%;
 }
-
 button[type="submit"] {
   height: 48px;
   font-size: 1.1rem;
   margin-top: 1rem;
   width: 100%;
 }
-
 p {
   text-align: center;
   margin-top: 1rem;

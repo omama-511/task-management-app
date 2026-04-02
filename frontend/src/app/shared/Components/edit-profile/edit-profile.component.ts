@@ -19,7 +19,7 @@ import { AuthService } from '../../../core/services/auth.service';
     MatInputModule
   ],
   templateUrl: './edit-profile.component.html',
-  styleUrl: './edit-profile.component.css'
+  styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileDialog {
   profileForm: FormGroup;

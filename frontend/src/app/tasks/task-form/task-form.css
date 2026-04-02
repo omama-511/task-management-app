@@ -1,37 +1,35 @@
 .form-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0;
-  background-color: transparent;
-  min-height: auto;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    min-height: calc(100vh - 100px);
+    background-color: transparent;
 }
-
 .task-form-card {
-  width: 100%;
-  max-width: 500px;
-  padding: 10px;
-  border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg) !important;
+    overflow: hidden;
 }
-
 .form-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 10px;
+    padding: 24px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
-
 .full-width {
-  width: 100%;
+    width: 100%;
 }
-
-.checkbox {
-  margin-top: 5px;
-}
-
 .actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 16px;
+    padding: 16px 24px !important;
+    background-color: rgba(0,0,0,0.02);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+.checkbox {
+    margin-top: 8px;
 }

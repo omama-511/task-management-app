@@ -1,22 +1,37 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+/** @vitest-environment jsdom */
 import { Navbar } from './navbar';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { of } from 'rxjs';
 
-describe('Navbar', () => {
+describe('Navbar (Unit Test)', () => {
   let component: Navbar;
-  let fixture: ComponentFixture<Navbar>;
+  let authServiceMock: { logout: ReturnType<typeof vi.fn>; isAuthenticated: boolean };
+  let routerMock: { navigate: ReturnType<typeof vi.fn> };
+  let themeServiceMock: { toggleTheme: ReturnType<typeof vi.fn>; isDarkTheme$: import('rxjs').Observable<boolean> };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Navbar],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(Navbar);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
+  beforeEach(() => {
+    authServiceMock = {
+      logout: vi.fn(),
+      isAuthenticated: true
+    };
+    routerMock = {
+      navigate: vi.fn()
+    };
+    themeServiceMock = {
+      toggleTheme: vi.fn(),
+      isDarkTheme$: of(false)
+    };
+    component = new Navbar(authServiceMock as unknown as import('../../../core/services/auth.service').AuthService, routerMock as unknown as import('@angular/router').Router, themeServiceMock as unknown as import('../../../core/services/theme.service').ThemeService);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should logout and navigate', () => {
+    component.logout();
+    expect(authServiceMock.logout).toHaveBeenCalled();
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/auth/login']);
+  });
+
+  it('should toggle theme', () => {
+    component.toggleTheme();
+    expect(themeServiceMock.toggleTheme).toHaveBeenCalled();
   });
 });

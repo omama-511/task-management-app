@@ -21,7 +21,7 @@ import { AuthService } from '../../../core/services/auth.service';
     MatIconModule
   ],
   templateUrl: './change-password.component.html',
-  styleUrl: './change-password.component.css'
+  styleUrls: ['./change-password.component.css']
 })
 export class ChangePasswordDialog {
   passwordForm: FormGroup;

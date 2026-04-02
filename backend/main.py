@@ -20,6 +20,10 @@ users_collection = db["users"]
 # FastAPI app
 app = FastAPI()
 
+ HEAD
+
+
+>>>>>>> cc9616b (Added test cases and covered them 100%)
 # Read from environment
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 

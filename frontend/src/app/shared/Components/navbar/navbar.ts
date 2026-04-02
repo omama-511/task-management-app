@@ -13,7 +13,7 @@ import { ThemeService } from '../../../core/services/theme.service';
   standalone: true,
   imports: [CommonModule, RouterModule, MatToolbarModule, MatButtonModule, MatIconModule],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css'
+  styleUrls: ['./navbar.css']
 })
 export class Navbar {
 

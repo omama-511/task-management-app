@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskService, Task } from '../../core/services/task.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-task-detail',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, MatCardModule, MatButtonModule, RouterModule],
   templateUrl: './task-detail.html',
   styleUrls: ['./task-detail.css']
 })
