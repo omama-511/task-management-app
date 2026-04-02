@@ -20,18 +20,13 @@ users_collection = db["users"]
 # FastAPI app
 app = FastAPI()
 
- HEAD
-
-
->>>>>>> cc9616b (Added test cases and covered them 100%)
-# Read from environment
+# CORS setup
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 origins = [
-    "http://localhost:4200",  # local dev
+    "http://localhost:4200",
 ]
 
-# Add production frontend if exists
 if FRONTEND_URL:
     origins.append(FRONTEND_URL)
 
@@ -43,55 +38,62 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Auth globals
+# Auth
 SECRET_KEY = os.environ.get("SECRET_KEY", "super-secret-key-12345")
 ALGORITHM = "HS256"
 security = HTTPBearer()
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
-        return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
-    except ValueError:
-        pass
+        return bcrypt.checkpw(
+            plain_password.encode("utf-8"),
+            hashed_password.encode("utf-8")
+        )
     except Exception:
-        pass
-    return False
+        return False
+
 
 def get_password_hash(password: str) -> str:
     salt = bcrypt.gensalt()
-    return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
+    return bcrypt.hashpw(password.encode("utf-8"), salt).decode("utf-8")
+
 
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(days=7)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get("sub")
-        if user_id is None:
+        user_id = payload.get("sub")
+        if not user_id:
             raise HTTPException(status_code=401, detail="Invalid token")
         return user_id
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-# Pydantic models
+
+# Models
 class UserCreate(BaseModel):
     name: str
     email: str
     password: str
 
+
 class UserLogin(BaseModel):
     email: str
     password: str
 
+
 class PasswordUpdate(BaseModel):
     current_password: str
     new_password: str
+
 
 class UserResponse(BaseModel):
     id: str
@@ -99,14 +101,17 @@ class UserResponse(BaseModel):
     email: str
     token: str
 
+
 class UserProfile(BaseModel):
     id: str
     name: str
     email: str
 
+
 class ProfileUpdate(BaseModel):
     name: str
     email: str
+
 
 class TaskModel(BaseModel):
     title: str
@@ -115,10 +120,12 @@ class TaskModel(BaseModel):
     priority: str = "Low"
     pinned: bool = False
 
+
 class TaskDB(TaskModel):
     id: str = Field(default_factory=str)
     user_id: str
     created_at: str
+
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
@@ -126,6 +133,7 @@ class TaskUpdate(BaseModel):
     completed: Optional[bool] = None
     priority: Optional[str] = None
     pinned: Optional[bool] = None
+
 
 # Helpers
 def task_helper(task) -> dict:
@@ -137,111 +145,11 @@ def task_helper(task) -> dict:
         "priority": task.get("priority", "Low"),
         "pinned": task.get("pinned", False),
         "user_id": str(task.get("user_id", "")),
-        "created_at": task["_id"].generation_time.isoformat()
+        "created_at": task["_id"].generation_time.isoformat(),
     }
+
 
 # Routes
 @app.get("/")
 async def root():
     return {"message": "API is running"}
-
-@app.post("/register", response_model=UserResponse)
-async def register(user: UserCreate):
-    existing_user = await users_collection.find_one({"email": user.email})
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    hashed_password = get_password_hash(user.password)
-    user_dict = {"name": user.name, "email": user.email, "password": hashed_password}
-    result = await users_collection.insert_one(user_dict)
-    
-    user_id = str(result.inserted_id)
-    token = create_access_token({"sub": user_id})
-    return {"id": user_id, "name": user.name, "email": user.email, "token": token}
-
-@app.post("/login", response_model=UserResponse)
-async def login(user: UserLogin):
-    db_user = await users_collection.find_one({"email": user.email})
-    if not db_user or not verify_password(user.password, db_user["password"]):
-        raise HTTPException(status_code=400, detail="Invalid email or password")
-    
-    user_id = str(db_user["_id"])
-    token = create_access_token({"sub": user_id})
-    return {"id": user_id, "name": db_user["name"], "email": db_user["email"], "token": token}
-
-@app.put("/users/me/password")
-async def update_password(update_data: PasswordUpdate, user_id: str = Depends(get_current_user)):
-    user = await users_collection.find_one({"_id": ObjectId(user_id)})
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-        
-    if not verify_password(update_data.current_password, user["password"]):
-        raise HTTPException(status_code=400, detail="Incorrect current password")
-        
-    hashed_new_password = get_password_hash(update_data.new_password)
-    await users_collection.update_one(
-        {"_id": ObjectId(user_id)}, {"$set": {"password": hashed_new_password}}
-    )
-    return {"detail": "Password updated successfully"}
-
-@app.get("/users/me", response_model=UserProfile)
-async def get_user_profile(user_id: str = Depends(get_current_user)):
-    user = await users_collection.find_one({"_id": ObjectId(user_id)})
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"id": str(user["_id"]), "name": user["name"], "email": user["email"]}
-
-@app.put("/users/me", response_model=UserProfile)
-async def update_profile(profile_data: ProfileUpdate, user_id: str = Depends(get_current_user)):
-    # Check if new email is taken by someone else
-    existing_user = await users_collection.find_one({"email": profile_data.email})
-    if existing_user and str(existing_user["_id"]) != user_id:
-        raise HTTPException(status_code=400, detail="Email already in use")
-
-    await users_collection.update_one(
-        {"_id": ObjectId(user_id)},
-        {"$set": {"name": profile_data.name, "email": profile_data.email}}
-    )
-    
-    return {"id": user_id, "name": profile_data.name, "email": profile_data.email}
-
-@app.get("/tasks", response_model=List[TaskDB])
-async def get_tasks(user_id: str = Depends(get_current_user)):
-    tasks = []
-    async for task in tasks_collection.find({"user_id": user_id}):
-        tasks.append(task_helper(task))
-    return tasks
-
-@app.get("/tasks/{task_id}", response_model=TaskDB)
-async def get_task(task_id: str, user_id: str = Depends(get_current_user)):
-    task = await tasks_collection.find_one({"_id": ObjectId(task_id), "user_id": user_id})
-    if task:
-        return task_helper(task)
-    raise HTTPException(status_code=404, detail="Task not found")
-
-@app.post("/tasks", response_model=TaskDB)
-async def create_task(task: TaskModel, user_id: str = Depends(get_current_user)):
-    task_dict = task.dict()
-    task_dict["user_id"] = user_id
-    result = await tasks_collection.insert_one(task_dict)
-    new_task = await tasks_collection.find_one({"_id": result.inserted_id})
-    return task_helper(new_task)
-
-@app.put("/tasks/{task_id}", response_model=TaskDB)
-async def update_task(task_id: str, task: TaskUpdate, user_id: str = Depends(get_current_user)):
-    update_data = {k: v for k, v in task.dict(exclude_unset=True).items() if v is not None}
-    result = await tasks_collection.update_one(
-        {"_id": ObjectId(task_id), "user_id": user_id}, {"$set": update_data}
-    )
-    if result.matched_count == 1:
-        updated_task = await tasks_collection.find_one({"_id": ObjectId(task_id)})
-        return task_helper(updated_task)
-    raise HTTPException(status_code=404, detail="Task not found")
-
-@app.delete("/tasks/{task_id}")
-async def delete_task(task_id: str, user_id: str = Depends(get_current_user)):
-    result = await tasks_collection.delete_one({"_id": ObjectId(task_id), "user_id": user_id})
-    if result.deleted_count == 1:
-        return {"detail": "Task deleted"}
-    raise HTTPException(status_code=404, detail="Task not found")
-
